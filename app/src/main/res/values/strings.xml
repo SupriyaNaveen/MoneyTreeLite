@@ -5,4 +5,8 @@
     <string name="file_name_transaction">transactions_</string>
     <string name="header_tag_transactions">transactions</string>
     <string name="account_title">Digital Money</string>
+    <string name="delete_transaction">Delete Transaction</string>
+    <string name="message_confirm_delete">Are you sure</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
 </resources>

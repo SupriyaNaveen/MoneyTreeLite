@@ -1,5 +1,6 @@
 package com.moneytree.moneytreelite.repository
 
+import androidx.lifecycle.LiveData
 import com.moneytree.moneytreelite.repository.data.Transaction
 import com.moneytree.moneytreelite.repository.db.TransactionDao
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +17,7 @@ class TransactionModel @Inject constructor(
     /**
      * Get all stored transaction from db, which is live data.
      */
-    suspend fun getTransactionsFromDb(accountId : Int): List<Transaction> {
+    suspend fun getTransactionsFromDb(accountId: Int): LiveData<List<Transaction>> {
         return withContext(Dispatchers.IO) { transactionDao.getTransactionsForAccountId(accountId) }
     }
 
@@ -26,6 +27,12 @@ class TransactionModel @Inject constructor(
     suspend fun getTransactionSum(accountId: Int): String {
         return withContext(Dispatchers.IO) {
             transactionDao.getTransactionsSum(accountId)
+        }
+    }
+
+    suspend fun deleteTransaction(transaction: Transaction?) {
+        withContext(Dispatchers.IO) {
+            transactionDao.deleteTransaction(transaction)
         }
     }
 }

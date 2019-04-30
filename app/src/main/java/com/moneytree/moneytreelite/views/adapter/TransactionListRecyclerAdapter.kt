@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.moneytree.moneytreelite.R
 import com.moneytree.moneytreelite.utility.Helper
-import java.util.*
 
 class TransactionListRecyclerAdapter(consolidatedList: List<ListItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -82,7 +81,9 @@ class TransactionListRecyclerAdapter(consolidatedList: List<ListItem>) : Recycle
         notifyDataSetChanged()
     }
 
-
+    fun getTransactionData(): List<ListItem> {
+        return consolidatedList
+    }
     // ViewHolder for header row item
     internal inner class HeaderViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         var mHeaderText: TextView = v.findViewById(R.id.textViewHeader)
