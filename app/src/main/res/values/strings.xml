@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MoneyTreeLite</string>
+    <string name="file_name_account">accounts.json</string>
+    <string name="header_tag_accounts">accounts</string>
+    <string name="file_name_transaction">transactions_</string>
+    <string name="header_tag_transactions">transactions</string>
+    <string name="account_title">Digital Money</string>
+</resources>

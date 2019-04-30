@@ -1,0 +1,12 @@
+{
+  "transactions": [
+    {
+      "account_id": 1,
+      "amount": -6850.0,
+      "category_id": 192,
+      "date": "2017-08-22T17:19:31+09:00",
+      "description": "2017-08-22T17:19:31+09:00",
+      "id": 11
+    }
+  ]
+}
