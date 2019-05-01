@@ -47,6 +47,9 @@ confirming that they really want to delete the transaction.
 #Link error
 https://github.com/SupriyaNaveen/MoneyTreeLite/blob/master/readmeImages/lint-results.html
 
+# Code Coverage
+![alt text](https://github.com/SupriyaNaveen/MoneyTreeLite/blob/master/readmeImages/CodeCoverage.PNG)
+
 # Accessibility
 I have worked on Talkback when working with HCL Technologies. Need to label view with focusable true.
 
