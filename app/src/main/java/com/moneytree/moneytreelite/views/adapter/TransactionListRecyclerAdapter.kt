@@ -6,9 +6,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.moneytree.moneytreelite.R
-import com.moneytree.moneytreelite.utility.Helper
+import com.moneytree.moneytreelite.utility.getDateInFormat
 
-class TransactionListRecyclerAdapter(consolidatedList: List<ListItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TransactionListRecyclerAdapter(consolidatedList: List<ListItem>) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var consolidatedList: List<ListItem> = ArrayList()
 
@@ -61,10 +62,12 @@ class TransactionListRecyclerAdapter(consolidatedList: List<ListItem>) : Recycle
             ListItem.TYPE_TRANSACTION -> {
                 val transactionItem = consolidatedList[position] as TransactionItem
                 val transactionViewHolder = viewHolder as TransactionViewHolder
-                val transaction = transactionItem.transaction
-                transactionViewHolder.mTextViewTransactionDate.text = Helper.getDateInFormat("dd", transaction!!.date!!)
-                transactionViewHolder.mTextViewTransactionDescription.text = transaction.description.toString()
-                transactionViewHolder.mTextViewTransactionBalance.text = transaction.amount.toString()
+
+                transactionItem.transaction?.run {
+                    transactionViewHolder.mTextViewTransactionDate.text = date?.let { getDateInFormat("dd", it) }
+                    transactionViewHolder.mTextViewTransactionDescription.text = description.toString()
+                    transactionViewHolder.mTextViewTransactionBalance.text = amount.toString()
+                }
             }
 
             ListItem.TYPE_HEADER -> {
@@ -84,6 +87,7 @@ class TransactionListRecyclerAdapter(consolidatedList: List<ListItem>) : Recycle
     fun getTransactionData(): List<ListItem> {
         return consolidatedList
     }
+
     // ViewHolder for header row item
     internal inner class HeaderViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         var mHeaderText: TextView = v.findViewById(R.id.textViewHeader)
@@ -91,7 +95,7 @@ class TransactionListRecyclerAdapter(consolidatedList: List<ListItem>) : Recycle
 
     // View holder for transaction row item
     internal inner class TransactionViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        var mTextViewTransactionDate : TextView = v.findViewById(R.id.textViewTransactionDate)
+        var mTextViewTransactionDate: TextView = v.findViewById(R.id.textViewTransactionDate)
         var mTextViewTransactionDescription: TextView = v.findViewById(R.id.textViewTransactionName)
         var mTextViewTransactionBalance: TextView = v.findViewById(R.id.textViewTransactionBalance)
     }

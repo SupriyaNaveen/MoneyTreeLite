@@ -68,18 +68,22 @@ class GroupedListRecyclerAdapter(context: Context, consolidatedList: List<ListIt
             ListItem.TYPE_ACCOUNT -> {
                 val accountItem = consolidatedList[position] as AccountItem
                 val accountViewHolder = viewHolder as AccountViewHolder
-                val account = accountItem.account
-                accountViewHolder.mTextViewAccountName.text = account!!.accountName
-                accountViewHolder.mTextAccountBalance.text = account.currency.plus(account.currentBalance)
-
+                accountItem.account?.run {
+                    accountViewHolder.mTextViewAccountName.text = accountName
+                    accountViewHolder.mTextAccountBalance.text = currency.plus(currentBalance)
+                }
                 //Row clicked
                 accountViewHolder.itemView.setOnClickListener {
-                    val intent = Intent(context, TransactionActivity::class.java)
-                    intent.putExtra(Constants.ACCOUNT_ID_INTENT_KEY, account.id)
-                    intent.putExtra(Constants.INSTITUTION_INTENT_KET, account.institution)
-                    intent.putExtra(Constants.ACCOUNT_NAME_INTENT_KEY, account.accountName)
-                    intent.putExtra(Constants.ACCOUNT_BALANCE_INTENT_KEY, account.currentBalance)
-                    context.startActivity(intent)
+
+                    accountItem.account?.also { account ->
+                        val intent = Intent(context, TransactionActivity::class.java).apply {
+                            putExtra(Constants.ACCOUNT_ID_INTENT_KEY, account.id)
+                            putExtra(Constants.INSTITUTION_INTENT_KET, account.institution)
+                            putExtra(Constants.ACCOUNT_NAME_INTENT_KEY, account.accountName)
+                            putExtra(Constants.ACCOUNT_BALANCE_INTENT_KEY, account.currentBalance)
+                        }
+                        context.startActivity(intent)
+                    }
                 }
             }
 

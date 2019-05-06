@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.moneytree.moneytreelite.repository.TransactionModel
 import com.moneytree.moneytreelite.repository.data.Transaction
-import com.moneytree.moneytreelite.utility.Helper
+import com.moneytree.moneytreelite.utility.getDateInFormat
 import com.moneytree.moneytreelite.views.adapter.HeaderItem
 import com.moneytree.moneytreelite.views.adapter.ListItem
 import com.moneytree.moneytreelite.views.adapter.TransactionItem
@@ -33,7 +33,7 @@ class TransactionViewModel @Inject constructor(private val transactionModel: Tra
 
         for (transaction in transactionList) {
 
-            val hashMapKey = Helper.getDateInFormat("MMMM YYYY", transaction.date!!)
+            val hashMapKey = getDateInFormat("MMMM YYYY", transaction.date!!)
 
             if (groupedHashMap.containsKey(hashMapKey)) {
                 groupedHashMap[hashMapKey]?.add(transaction)

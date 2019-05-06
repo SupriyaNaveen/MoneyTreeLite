@@ -8,17 +8,13 @@ import java.util.*
 /**
  * Provides generic static method.
  */
-class Helper {
-    companion object {
-        fun getDateInFormat(outputFormatString: String, dateString: Date): String {
-            val outputFormatter = SimpleDateFormat(outputFormatString, Locale.ENGLISH)
-            var resultString = " "
-            try {
-                resultString = outputFormatter.format(dateString)
-            } catch (ex: ParseException) {
-                Timber.e(ex.localizedMessage)
-            }
-            return resultString
-        }
+fun getDateInFormat(outputFormatString: String, dateString: Date): String {
+    val outputFormatter = SimpleDateFormat(outputFormatString, Locale.ENGLISH)
+    var resultString = " "
+    try {
+        resultString = outputFormatter.format(dateString)
+    } catch (ex: ParseException) {
+        Timber.e(ex.localizedMessage)
     }
+    return resultString
 }

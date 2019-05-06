@@ -73,21 +73,26 @@ class AccountsActivity : AppCompatActivity(), CoroutineScope {
             })
         }
 
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setDisplayShowHomeEnabled(true)
-        supportActionBar!!.title = getString(R.string.account_title)
+        supportActionBar?.run {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+            title = getString(R.string.account_title)
+        }
     }
 
     /**
      * Initialize the recycler adapter with Layout Manager.
      */
     private fun initializeRecycler() {
-        val gridLayoutManager = GridLayoutManager(this, 1)
-        gridLayoutManager.orientation = RecyclerView.VERTICAL
-        recyclerViewAccounts.apply {
-            setHasFixedSize(true)
-            layoutManager = gridLayoutManager
+        GridLayoutManager(this, 1).apply {
+            orientation = RecyclerView.VERTICAL
+        }.also { gridLayoutManager ->
+            recyclerViewAccounts.apply {
+                setHasFixedSize(true)
+                layoutManager = gridLayoutManager
+            }
         }
+
         recyclerViewAccounts.adapter = mAccountsAdapter
     }
 
@@ -96,15 +101,18 @@ class AccountsActivity : AppCompatActivity(), CoroutineScope {
      * The account data is grouped to tree hash map with its institution name.
      * Each group name includes, list of account with that institution.
      * Then consolidate the tree hash map to header and account type to show in adapter.
+     *
+     * The Scope functions used for functionality.
      */
     private fun loadAccountData() {
         launch {
             mAccountsViewModel.getAccounts().observe(this@AccountsActivity, Observer {
 
-                val groupedHashMap = mAccountsViewModel.groupAccountsByInstitution(ArrayList(it))
-                val consolidatedList = mAccountsViewModel.prepareListForRecyclerView(groupedHashMap)
-                mAccountsAdapter.updateAccountsData(consolidatedList)
-
+                mAccountsViewModel.groupAccountsByInstitution(ArrayList(it)).let { groupedTreeMap ->
+                    mAccountsViewModel.prepareListForRecyclerView(groupedTreeMap).let { consolidatedList ->
+                        mAccountsAdapter.updateAccountsData(consolidatedList)
+                    }
+                }
             })
         }
     }

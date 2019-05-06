@@ -57,10 +57,13 @@ class TransactionActivity : AppCompatActivity()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transactions)
 
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        supportActionBar?.run {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+            title = intent.getStringExtra(Constants.INSTITUTION_INTENT_KET)
+        }
 
-        mTransactionViewModel = ViewModelProviders.of(this, this.mTransactionViewModelFactory).get(
+        mTransactionViewModel = ViewModelProviders.of(this, mTransactionViewModelFactory).get(
             TransactionViewModel::class.java
         )
 
@@ -69,12 +72,13 @@ class TransactionActivity : AppCompatActivity()
         // Get the account id from selected account. Load the transaction details.
         // I can pass Account bundle itself parcelization
         // I can pass account id then get Account by querying DB.
-        val accountId = intent.getIntExtra(Constants.ACCOUNT_ID_INTENT_KEY, 0)
-        supportActionBar!!.title = intent.getStringExtra(Constants.INSTITUTION_INTENT_KET)
         textViewAccountName.text = intent.getStringExtra(Constants.ACCOUNT_NAME_INTENT_KEY)
         textViewAccountBalance.text = intent.getFloatExtra(Constants.ACCOUNT_BALANCE_INTENT_KEY, 0.0f).toString()
-        loadData(accountId)
-        loadTitle(accountId)
+
+        intent.getIntExtra(Constants.ACCOUNT_ID_INTENT_KEY, 0).also { accountId ->
+            loadData(accountId)
+            loadTitle(accountId)
+        }
     }
 
     private fun loadTitle(accountId: Int) {
@@ -88,11 +92,13 @@ class TransactionActivity : AppCompatActivity()
      * Initialize the recycler adapter with Layout Manager.
      */
     private fun initializeRecycler() {
-        val gridLayoutManager = GridLayoutManager(this, 1)
-        gridLayoutManager.orientation = RecyclerView.VERTICAL
-        recyclerViewTransactions.apply {
-            setHasFixedSize(true)
-            layoutManager = gridLayoutManager
+        GridLayoutManager(this, 1).apply {
+            orientation = RecyclerView.VERTICAL
+        }.also { gridLayoutManager ->
+            recyclerViewTransactions.apply {
+                setHasFixedSize(true)
+                layoutManager = gridLayoutManager
+            }
         }
 
         val swipeHandler = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -113,8 +119,9 @@ class TransactionActivity : AppCompatActivity()
                 }
             }
         }
-        val itemTouchHelper = ItemTouchHelper(swipeHandler)
-        itemTouchHelper.attachToRecyclerView(recyclerViewTransactions)
+        ItemTouchHelper(swipeHandler).apply {
+            attachToRecyclerView(recyclerViewTransactions)
+        }
 
         recyclerViewTransactions.adapter = mTransactionsAdapter
     }
@@ -129,9 +136,11 @@ class TransactionActivity : AppCompatActivity()
     private fun loadData(accountId: Int) {
         launch {
             mTransactionViewModel.getTransactions(accountId).observe(this@TransactionActivity, Observer {
-                val groupedHashMap = mTransactionViewModel.groupTransactionByMonth(ArrayList(it))
-                val consolidatedList = mTransactionViewModel.prepareListForRecyclerView(groupedHashMap)
-                mTransactionsAdapter.updateTransactionData(consolidatedList)
+                mTransactionViewModel.groupTransactionByMonth(ArrayList(it)).let { groupedHashMap ->
+                    mTransactionViewModel.prepareListForRecyclerView(groupedHashMap).let { consolidatedList ->
+                        mTransactionsAdapter.updateTransactionData(consolidatedList)
+                    }
+                }
             })
         }
     }
@@ -140,29 +149,24 @@ class TransactionActivity : AppCompatActivity()
      * Before deleting transaction confirm from user.
      */
     private fun showDeleteConfirmationDialog(transactionItem: TransactionItem) {
-        val builder = AlertDialog.Builder(this)
+        AlertDialog.Builder(this).apply {
+            // Set the alert dialog title
+            setTitle(getString(R.string.delete_transaction))
 
-        // Set the alert dialog title
-        builder.setTitle(getString(R.string.delete_transaction))
+            // Display a message on alert dialog
+            setMessage(getString(R.string.message_confirm_delete))
 
-        // Display a message on alert dialog
-        builder.setMessage(getString(R.string.message_confirm_delete))
-
-        // Set a positive button and its click listener on alert dialog
-        builder.setPositiveButton(getString(R.string.yes)) { _, _ ->
-            launch {
-                mTransactionViewModel.deleteTransaction(transactionItem.transaction)
+            // Set a positive button and its click listener on alert dialog
+            setPositiveButton(getString(R.string.yes)) { _, _ ->
+                launch {
+                    mTransactionViewModel.deleteTransaction(transactionItem.transaction)
+                }
             }
-        }
-        builder.setNegativeButton(getString(R.string.cancel)) { dialogInterface: DialogInterface, _: Int ->
-            mTransactionsAdapter.notifyDataSetChanged()
-            dialogInterface.cancel()
-        }
+            setNegativeButton(getString(R.string.cancel)) { dialogInterface: DialogInterface, _: Int ->
+                mTransactionsAdapter.notifyDataSetChanged()
+                dialogInterface.cancel()
+            }
 
-        // Finally, make the alert dialog using builder
-        val dialog: AlertDialog = builder.create()
-
-        // Display the alert dialog on app interface
-        dialog.show()
+        }.create().show()
     }
 }
