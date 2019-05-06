@@ -1,6 +1,5 @@
 package com.moneytree.moneytreelite.viewmodels
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.moneytree.moneytreelite.repository.AccountModel
 import com.moneytree.moneytreelite.repository.data.Account
@@ -21,16 +20,12 @@ class AccountsViewModel @Inject constructor(private val accountModel: AccountMod
     /**
      * Get live data of accounts information
      */
-    suspend fun getAccounts(): LiveData<List<Account>> {
-        return accountModel.getAccountsFromDb()
-    }
+    suspend fun getAccounts() = accountModel.getAccountsFromDb()
 
     /**
      * Get the sum of all account balance.
      */
-    suspend fun getSumOfAccountsBalance(): LiveData<Float> {
-        return accountModel.getSumOfAccountsBalance()
-    }
+    suspend fun getSumOfAccountsBalance() = accountModel.getSumOfAccountsBalance()
 
     /**
      * Group by institution. TreeMap sort String alphabetically.

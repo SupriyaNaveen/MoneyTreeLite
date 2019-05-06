@@ -1,6 +1,5 @@
 package com.moneytree.moneytreelite.viewmodels
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.moneytree.moneytreelite.repository.TransactionModel
 import com.moneytree.moneytreelite.repository.data.Transaction
@@ -20,9 +19,11 @@ class TransactionViewModel @Inject constructor(private val transactionModel: Tra
     /**
      * Get the transaction based on account id. Live data of Transaction handled in activity
      */
-    suspend fun getTransactions(accountId: Int): LiveData<List<Transaction>> {
-        return transactionModel.getTransactionsFromDb(accountId)
-    }
+    suspend fun getTransactions(accountId: Int) = transactionModel.getTransactionsFromDb(accountId)
+
+    suspend fun getTransactionSum(accountId: Int) = transactionModel.getTransactionSum(accountId)
+
+    suspend fun deleteTransaction(transaction: Transaction?) = transactionModel.deleteTransaction(transaction)
 
     /**
      * Date wise ordered in query itself.
@@ -83,15 +84,6 @@ class TransactionViewModel @Inject constructor(private val transactionModel: Tra
         }
         return "  +$creditBalance $debitBalance"
     }
-
-    suspend fun getTransactionSum(accountId: Int): String {
-        return transactionModel.getTransactionSum(accountId)
-    }
-
-    suspend fun deleteTransaction(transaction: Transaction?) {
-        transactionModel.deleteTransaction(transaction)
-    }
-
 }
 
 

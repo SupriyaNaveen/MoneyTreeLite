@@ -17,13 +17,10 @@ class TransactionListRecyclerAdapter(consolidatedList: List<ListItem>) :
         this.consolidatedList = consolidatedList
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return consolidatedList[position].getType()
-    }
+    override fun getItemViewType(position: Int) = consolidatedList[position].getType()
 
-    override fun getItemCount(): Int {
-        return consolidatedList.size
-    }
+    override fun getItemCount() = consolidatedList.size
+
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -84,9 +81,7 @@ class TransactionListRecyclerAdapter(consolidatedList: List<ListItem>) :
         notifyDataSetChanged()
     }
 
-    fun getTransactionData(): List<ListItem> {
-        return consolidatedList
-    }
+    fun getTransactionData() = consolidatedList
 
     // ViewHolder for header row item
     internal inner class HeaderViewHolder(v: View) : RecyclerView.ViewHolder(v) {

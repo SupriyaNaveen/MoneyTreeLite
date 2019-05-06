@@ -6,7 +6,5 @@ class TransactionItem : ListItem() {
 
     var transaction: Transaction? = null
 
-    override fun getType(): Int {
-        return TYPE_TRANSACTION
-    }
+    override fun getType() = TYPE_TRANSACTION
 }

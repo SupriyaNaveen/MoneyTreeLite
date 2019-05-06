@@ -23,13 +23,9 @@ class GroupedListRecyclerAdapter(context: Context, consolidatedList: List<ListIt
         this.context = context
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return consolidatedList[position].getType()
-    }
+    override fun getItemViewType(position: Int) = consolidatedList[position].getType()
 
-    override fun getItemCount(): Int {
-        return consolidatedList.size
-    }
+    override fun getItemCount() = consolidatedList.size
 
     override fun onCreateViewHolder(
         parent: ViewGroup,

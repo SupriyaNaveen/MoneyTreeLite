@@ -6,7 +6,5 @@ class AccountItem : ListItem() {
 
     var account: Account? = null
 
-    override fun getType(): Int {
-        return TYPE_ACCOUNT
-    }
+    override fun getType() = TYPE_ACCOUNT
 }
